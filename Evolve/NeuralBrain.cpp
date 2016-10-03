@@ -1,8 +1,4 @@
 #include <cmath>
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <time.h>
 
 class Node
 {
@@ -17,6 +13,7 @@ public:
 	void setParentWeightAt(int i, double v);
 	Node* getParentAt(int i);
 	bool setValue(double v);
+	int getParentSize();
 
 private:
 
@@ -34,8 +31,11 @@ class NeuralNet
 public:
 	NeuralNet(int iLength, int oLength);
 	NeuralNet(int iLength, int hLength, int oLength);
-	double* simulate(double input[]);
 	~NeuralNet();
+
+	double* simulate(double input[]);
+	Node* getNodeAt(int layer, unsigned int number);
+
 private:
 	Node** inputLayer;
 	Node** hiddenLayer;
@@ -107,6 +107,31 @@ NeuralNet::~NeuralNet()
 	}
 	delete outputLayer;
 	delete output;
+}
+
+Node* NeuralNet::getNodeAt(int layer, unsigned int number)
+{
+	if (layer == 0) {
+		if (number >= inputLength) {
+			return nullptr;
+		}
+		return inputLayer[number];
+	}
+	else if (layer == 1) {
+		if (number >= hiddenLength) {
+			return nullptr;
+		}
+		return hiddenLayer[number];
+	}
+	else if (layer == 2) {
+		if (number >= outputLength) {
+			return nullptr;
+		}
+		return outputLayer[number];
+	}
+	else {
+		return nullptr;
+	}
 }
 
 Node::Node()
@@ -187,4 +212,9 @@ bool Node::setValue(double v)
 	else {
 		return false;
 	}
+}
+
+int Node::getParentSize()
+{
+	return parentsize;
 }
